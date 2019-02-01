@@ -1,11 +1,11 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.5.2;
 
 import "./PetsManager.sol";
-import "./ETC721.sol"
+import "./ETC721.sol";
 
 contract PetsOwnership is PetsManager, ERC721{
-    function PetsOwnership(){
 
+    function PetsOwnership(){
     }
 
     mapping (uint => address) petApprovals;
@@ -16,16 +16,17 @@ contract PetsOwnership is PetsManager, ERC721{
 
     function _transfer(address _from, address _to, uint256 _tokenId) private {
         petToOwner[_tokenId] = _to;
-        Transfer(_from, _to, _tokenId);
+        Transfer(_from, _to, _tokenId); // Event to announce that a pet was transfer
     }
 
     function transfer(address _to, uint256 _tokenId) public onlyOwnerOf(_tokenId) {
+        require(_to != address(0), "Is not possible transfer to address 0");
         _transfer(msg.sender, _to, _tokenId);
     }
 
     function approve(address _to, uint256 _tokenId) public onlyOwnerOf(_tokenId) {
         petToOwner[_tokenId] = _to;
-        Approval(msg.sender, _to, _tokenId);
+        Approval(msg.sender, _to, _tokenId); // Event to announce that a pet transfer was approved
     }
 
     function takeOwnership(uint256 _tokenId) public {

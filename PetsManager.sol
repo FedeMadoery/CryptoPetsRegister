@@ -13,7 +13,6 @@ contract PetsManager is Ownable {
         _;
     }
 
-    // TODO Events that announce new pet and pet transactions
     event NewPet(uint petId, string name, uint dna);
 
     function PetsManager(){
@@ -22,7 +21,7 @@ contract PetsManager is Ownable {
 
     struct Pet {
         string name;
-        string breed;
+        string breed; // TODO re-think the breed model
         uint dna; // If its gen0 the DNA will be the original number of certificate pure breed
         uint fatherId; // Address to identify the father
         uint motherId; // Address to identify the mother
@@ -38,9 +37,8 @@ contract PetsManager is Ownable {
     }
 
     // Function to create the first pets with no parents saved, only the owner can create that's ones
-    function _createGen0Pets(string _name, string _breed) external onlyOwner {
-        uint dna = _generateRandomDna(_name + _breed);
-        _createPet(_name, _breed, dna, 0, 0);
+    function _createGen0Pets(string _name, string _breed, uint _dna) external onlyOwner {
+        _createPet(_name, _breed, _dna, 0, 0);
     }
 
     function _generateRandomDna(string _str) private view returns (uint) {
@@ -49,14 +47,15 @@ contract PetsManager is Ownable {
     }
 
     function registerPet(string _name, uint _fatherId, uint _motherId) external {
-        // TODO Validate that _fatherId and _motherId, are real
+        require(pets[_fatherId].exists, "Father does not exist.");
+        require(pets[_motherId].exists, "Mother does not exist.");
         Pet memory father = pets[_fatherId];
         Pet memory mother = pets[_motherId];
 
         // The child will be pure breed if the father and mother has the same breed
         string breed = (father.breed == mother.breed ? mother.breed : "Half Blood" );
 
-        uint dna = _generateRandomDna( (father.dna + mother.dna)/mother.dna + _name + mother.breed + breed );
+        uint dna = _generateRandomDna( (father.dna + mother.dna)/mother.dna + _name + breed );
         _createPet(_name, breed, dna, _fatherId, _motherId);
     }
 
