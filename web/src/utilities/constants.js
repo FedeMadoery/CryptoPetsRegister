@@ -1,0 +1,2 @@
+export const ETHEREUM_ACCESS_DENIED = 'ETHEREUM_ACCESS_DENIED';
+export const NO_WEB3 = 'NO_WEB3';
