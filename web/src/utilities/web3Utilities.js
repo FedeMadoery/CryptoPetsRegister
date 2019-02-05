@@ -100,13 +100,14 @@ export function networkChangedSubscription(web3, onChangeCallBack) {
     const { ethereum } = window;
     let userData = {};
     ethereum.on('networkChanged', async network => {
-        let balance = await _getBalance(web3, userData.address);
+        let {account, balance} = await getAccountAndBalance(web3);
         userData = {
+            account: account,
             currentNetwork: network,
             balance: balance
-        }
+        };
         onChangeCallBack(userData)
-    })
+    });
     return userData
 }
 

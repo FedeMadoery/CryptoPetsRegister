@@ -80,6 +80,7 @@ function initAndSubscribeWeb3(web3Obj, dispatch) {
             console.log(balAndNet.balance);                 //TODO
             console.log(balAndNet.currentNetwork)           //TODO
         });
+
     dispatch(_initializeWeb3(web3Obj))
 }
 
