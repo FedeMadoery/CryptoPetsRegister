@@ -5,9 +5,6 @@ import "./ETC721.sol";
 
 contract PetsOwnership is PetsManager, ERC721{
 
-    function PetsOwnership(){
-    }
-
     mapping (uint => address) petApprovals;
 
     function ownerOf(uint256 _tokenId) public view returns (address _owner) {

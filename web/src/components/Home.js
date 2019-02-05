@@ -1,46 +1,29 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+
 import '../App.css';
-import {getAccountAndBalance, initializationWeb3} from "../utilities/web3Utilities";
+import {getAccountAndEtherBalance, initializeWeb3} from "../redux/actions/Web3Actions";
 
 
 class Home extends Component {
-    state = {
-        account: '',
-        balance: '',
-        web3: {},
-        contract: {}
-    };
-    //TODO Implement Redux - Soon as possible
 
     componentDidMount() {
-        initializationWeb3(
-            window,
-            (web3Obj) => this.setWeb3(web3Obj), //Workaround to have context - TODO Make better
-            this.setWeb3Error,
-            "http://localhost:8545"
-        );
-        // TODO Need deal with .enable() bug - If user dont notice that app need approval
+        const {initializeWeb3} = this.props;
+        initializeWeb3("http://localhost:8545");
 
-    }
-
-    setWeb3(web3Obj) {
-        this.setState(web3Obj);
     }
 
     async getData() {
-        // TODO change this for a method that return accounts and balance at once
-        const {web3} = this.state;
-        const {account, balance} = await getAccountAndBalance(web3);
-        this.setState({account, balance});
+        const {web3Obj, getAccountAndEtherBalance} = this.props;
+        getAccountAndEtherBalance(web3Obj);
     }
-
 
     setWeb3Error(error) {
         console.log(error);
     }
 
     render() {
-        const {balance, account} = this.state;
+        const {balance, account} = this.props;
         return (
             <>
                 <h1>Home</h1>
@@ -50,10 +33,14 @@ class Home extends Component {
                 </button>
 
                 <h3>{'Account: ' + account}</h3>
-                <h5>{'Balance: ' + balance / 10 ** 18 + ' Ether'}</h5>
+                <h5>{'Balance: ' + balance + ' Ether'}</h5>
             </>
         );
     }
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+    return {...state.web3}
+};
+
+export default connect(mapStateToProps, {initializeWeb3, getAccountAndEtherBalance})(Home);
