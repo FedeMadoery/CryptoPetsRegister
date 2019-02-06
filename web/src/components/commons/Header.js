@@ -31,7 +31,7 @@ class Header extends Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const {classes, handleDrawerOpen} = this.props;
         const {balance, account} = this.props.web3;
         const accountTruncated = _.truncate(account, {'length': 6,}) + account.slice(-4);
         const {anchorEl, pendingNotifications} = this.state;
@@ -65,7 +65,11 @@ class Header extends Component {
             <>
                 <AppBar position="static">
                     <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+                        <IconButton
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="Open drawer"
+                            onClick={handleDrawerOpen}>
                             <MenuIcon/>
                         </IconButton>
                         <Typography className={classes.title} variant="h6" color="inherit" noWrap>

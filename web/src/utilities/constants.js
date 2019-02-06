@@ -10,3 +10,6 @@ export const TRANSACTION_ERROR_CODES = [
 
 export const GAS_PRICE = ''; // TODO Implement mas_price as optional parameter
 export const MAX_GAS = 0; // TODO Implement max_gas as optional parameter
+
+
+export const DRAWER_WIDTH = 240; // Size of SideBar
