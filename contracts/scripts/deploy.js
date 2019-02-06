@@ -70,15 +70,10 @@ const deploy = async () => {
 
     let ans_mnemonic = await askQuestion("Enter the MNEMONIC\n");
 
-    const provider = new HDWalletProvider(
-        ans_mnemonic,
-        NET_LINK
-    );
-
+    const provider = new HDWalletProvider(ans_mnemonic, NET_LINK);
     ans_mnemonic = null;
 
     web3 = new Web3(provider);
-
     const accounts = await web3.eth.getAccounts();
 
     console.log(FgYellow + 'Attemting deploy from account: ', accounts[0]);
