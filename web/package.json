@@ -35,5 +35,6 @@
   ],
   "devDependencies": {
     "react-redux": "^6.0.0"
-  }
+  },
+  "author": "Federico Madoery"
 }

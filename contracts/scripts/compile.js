@@ -6,3 +6,5 @@ const contractPath = path.resolve(__dirname, 'solidity-contracts', 'PetsManager.
 const source = fs.readFileSync(contractPath, 'utf8');
 
 module.exports = solc.compile(source, 1).contracts[':PetsManager'];
+
+
