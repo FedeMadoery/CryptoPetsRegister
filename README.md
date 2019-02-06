@@ -27,11 +27,11 @@ Get familiar with the folder structure
 	    |-- /commons/
 	    |-- /material-ui/                           # A js file that export all Material-UI elemtns of the librery in one file
     |-- /services/                                      # Holds a js file that containt the services functions
-	|-- /utilities/					# Any constant variable used throughout the app and my own Web3Utilities.js
-	|-- /redux/                                     # Redux Reducers + Redux Actions + Store Configuration
+|-- /utilities/					        # Any constant variable used throughout the app and my own Web3Utilities.js
+|-- /redux/                                             # Redux Reducers + Redux Actions + Store Configuration
         |-- /actions/
         |-- /reducers/
-        |-- /store/
+        |-- /store/ 
 ```
 
 # Web section
