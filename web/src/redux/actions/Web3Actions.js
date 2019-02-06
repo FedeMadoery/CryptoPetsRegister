@@ -68,6 +68,13 @@ export function callTransaction(contract, methodName, parameters) {
 
 /** Function to subscribe for changes a dispatch _init **/
 function initAndSubscribeWeb3(web3Obj, dispatch) {
+
+    // Request Account Address and Balance
+    getAccountAndBalance(web3Obj,)
+        .then( (result) => {
+            dispatch(_updateAccount(result.account));
+            dispatch(_updateBalance(result.balance));
+        });
     // Subscribe to any account change
     accountChangedSubscription(web3Obj,
         (accAndBal) => {

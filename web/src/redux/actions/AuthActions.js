@@ -1,6 +1,6 @@
 import {EMAIL_CHANGED, LOGIN_USER, LOGIN_USER_SUCCESS, LOGOUT_USER, PASSWORD_CHANGED} from "./types";
 import history from '../../components/commons/history';
-import service from "../../components/services/services";
+import service from "../../services/services";
 
 export const emailChanged = (text) => {
 

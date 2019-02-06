@@ -12,8 +12,8 @@ export function initializationWeb3(setWeb3, setWeb3Error, providerURL) {
     if (ethereum)
         ethereum.enable()
             .then(() => {
-                const web3js = new Web3(ethereum);
-                setWeb3(web3js);
+                const web3Obj = new Web3(ethereum);
+                setWeb3(web3Obj);
             })
             .catch(deniedAccessMessage => {
                 const deniedAccessError = new Error(deniedAccessMessage.toString());
@@ -23,14 +23,14 @@ export function initializationWeb3(setWeb3, setWeb3Error, providerURL) {
 
     // for legacy dapp browsers
     else if (web3 && web3.currentProvider) {
-        const web3js = new Web3(web3.currentProvider);
-        setWeb3(web3js);
+        const web3Obj = new Web3(web3.currentProvider);
+        setWeb3(web3Obj);
     }
 
     // use providerURL as a backup
     else if (providerURL) {
-        const web3js = new Web3(providerURL);
-        setWeb3(web3js);
+        const web3Obj = new Web3(providerURL);
+        setWeb3(web3Obj);
     }
 
     // no web3 detected

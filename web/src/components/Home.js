@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 
 import '../App.css';
-import {getAccountAndEtherBalance, initializeWeb3} from "../redux/actions/Web3Actions";
+import {getAccountAndEtherBalance, initializeWeb3} from "../redux/actions";
+import Header from "./commons/Header";
 
 
 class Home extends Component {
@@ -26,14 +28,8 @@ class Home extends Component {
         const {balance, account} = this.props;
         return (
             <>
+                <Header></Header>
                 <h1>Home</h1>
-
-                <button onClick={() => this.getData()}>
-                    getData
-                </button>
-
-                <h3>{'Account: ' + account}</h3>
-                <h5>{'Balance: ' + balance + ' Ether'}</h5>
             </>
         );
     }
@@ -43,4 +39,10 @@ const mapStateToProps = (state) => {
     return {...state.web3}
 };
 
-export default connect(mapStateToProps, {initializeWeb3, getAccountAndEtherBalance})(Home);
+const styles = {
+
+};
+
+export default withStyles(styles)(
+    connect(mapStateToProps, {initializeWeb3, getAccountAndEtherBalance})(Home)
+);
