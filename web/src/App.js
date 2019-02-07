@@ -3,7 +3,7 @@ import Provider from "react-redux/es/components/Provider";
 
 import {store} from "./redux/store/store";
 
-import Home from "./components/Home";
+import Home from "./components/Main";
 import './App.css';
 
 class App extends Component {

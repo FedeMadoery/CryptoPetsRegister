@@ -10,7 +10,7 @@ import SideBar from "./commons/SideBar";
 import {DRAWER_WIDTH} from "../utilities/constants";
 
 
-class Home extends Component {
+class Main extends Component {
     state = {
         openDrawer: false
     };
@@ -34,8 +34,8 @@ class Home extends Component {
 
         return (
             <>
-                <Header handleDrawerOpen={this.handleDrawerOpen}></Header>
-                <SideBar open={openDrawer} handleDrawerClose={this.handleDrawerClose}></SideBar>
+                <Header handleDrawerOpen={this.handleDrawerOpen}/>
+                <SideBar open={openDrawer} handleDrawerClose={this.handleDrawerClose}/>
                 <main
                     className={classNames(classes.content, {
                         [classes.contentShift]: openDrawer,
@@ -74,5 +74,5 @@ const styles = theme =>  ({
 });
 
 export default withStyles(styles)(
-    connect(mapStateToProps, {initializeWeb3, getAccountAndEtherBalance})(Home)
+    connect(mapStateToProps, {initializeWeb3, getAccountAndEtherBalance})(Main)
 );

@@ -1,4 +1,4 @@
-pragma solidity ^0.5.2;
+pragma solidity ^0.4.25;
 
 import "./PetsManager.sol";
 import "./commons/ETC721.sol";
