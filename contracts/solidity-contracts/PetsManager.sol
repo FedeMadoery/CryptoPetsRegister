@@ -16,12 +16,9 @@ contract PetsManager is Ownable {
 
     event NewPet(uint petId, string name, uint dna);
 
-    function PetsManager(){
-
-    }
 
     struct Breed {
-        string type; // Name of the breed
+        string breedType; // Name of the breed
         string subType; // Variations of the same breed
     }
 
@@ -33,31 +30,32 @@ contract PetsManager is Ownable {
         uint dna; // If its gen0 the DNA will be the original number of certificate pure breed
         uint fatherId; // Address to identify the father
         uint motherId; // Address to identify the mother
+        bool exists;
     }
 
     Pet[] public pets;
     mapping (uint => address) public petToOwner;
 
     function _createPet(string _name, string _color, Breed _breed, uint8 _sex, uint _dna, uint _fatherId, uint _motherId) private {
-        uint id = pets.push(Pet(_name, _color, _breed, _sex, _dna, _fatherId, _motherId));
+        uint id = pets.push(Pet(_name, _color, _breed, _sex, _dna, _fatherId, _motherId, true));
         petToOwner[id] = msg.sender;
-        NewPet(id, _name, _dna);
+        emit NewPet(id, _name, _dna);
     }
 
     // Function to create the first pets with no parents saved, only the owner can create that's ones
     function _createGen0Pets(string _name, string _breedType, string _breedSubType, uint8 _sex, string _color, uint _dna) external onlyOwner {
-        Breed breed = Breed(_breedType, _breedSubType);
-        _createPet(_name, _color, _breed, _sex, _dna, 0, 0);
+        Breed memory breed = Breed(_breedType, _breedSubType);
+        _createPet(_name, _color, breed, _sex, _dna, 0, 0);
     }
 
-    function _generateRandomDna(string _str) private view returns (uint) {
+    function _generateRandomDna(bytes _str) private view returns (uint) {
         uint rand = uint(keccak256(_str));
         return rand % dnaModulus;
     }
 
-    function _equalsBreed(Breed storage _first, Breed storage _second) internal view returns (bool) {
+    function _equalsBreed(Breed memory _first, Breed memory _second) internal pure returns (bool) {
         // Just compare the output of hashing all fields packed
-        return(keccak256(abi.encodePacked(_first.type, _first.subType)) == keccak256(abi.encodePacked(_second.type, _second.subType)));
+        return(keccak256(abi.encodePacked(_first.breedType, _first.subType)) == keccak256(abi.encodePacked(_second.breedType, _second.subType)));
     }
 
     function registerPet(string _name, string _color, uint8 _sex, uint _fatherId, uint _motherId) external {
@@ -67,10 +65,10 @@ contract PetsManager is Ownable {
         Pet memory mother = pets[_motherId];
 
         // The child will be pure breed if the father and mother has the same breed
-        Breed breed = (_equalsBreed(father.breed, mother.breed) ? mother.breed : "Half Blood" );
+        Breed memory breed = (_equalsBreed(father.breed, mother.breed) ? mother.breed : Breed("Half Blood", "") );
 
-        uint dna = _generateRandomDna( (father.dna + mother.dna)/mother.dna + _name + _color + _sex );
-        _createPet(_name, _color, breed, dna, _fatherId, _motherId);
+        uint dna = _generateRandomDna( abi.encodePacked(father.name, mother.name, _name, _color, _sex));
+        _createPet(_name, _color, breed, _sex, dna, _fatherId, _motherId);
     }
 
     function changeName(uint _petId, string _newName) external payable onlyOwnerOf(_petId) {
@@ -89,6 +87,6 @@ contract PetsManager is Ownable {
     }
 
     function withdraw() external onlyOwner {
-        owner.transfer(this.balance);
+        owner().transfer(address(this).balance);
     }
 }
