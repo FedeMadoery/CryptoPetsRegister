@@ -3,8 +3,9 @@ import Provider from "react-redux/es/components/Provider";
 
 import {store} from "./redux/store/store";
 
-import Home from "./components/Main";
+
 import './App.css';
+import Main from "./components/Main";
 
 class App extends Component {
     render() {
@@ -21,7 +22,7 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <div className="App">
-                    <Home></Home>
+                    <Main></Main>
                 </div>
             </Provider>
         );

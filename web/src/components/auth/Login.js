@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {emailChanged, loginUser, passwordChanged} from "../../redux/actions";
 import {withRouter} from 'react-router-dom';
+import {withStyles} from "@material-ui/core";
 
-import {AppBar, TextField, Button} from '../material-ui';
+import {emailChanged, loginUser, passwordChanged} from "../../redux/actions";
+import {TextField, Button} from '../material-ui';
 
 class Login extends Component {
 
@@ -13,14 +14,6 @@ class Login extends Component {
 
         const {email, password} = this.props;
         this.props.loginUser({email, password});
-    }
-
-    handleChange(event) {
-        const inputName = event.target.name;
-        const inputValue = event.target.value;
-        this.setState({[inputName]: inputValue});
-
-
     }
 
     onEmailChange(event) {
@@ -39,46 +32,44 @@ class Login extends Component {
 
     }
 
-    checkUser() {
-        const {user, history} = this.props;
-        if (user) {
-            history.push(`/home`);
-        }
-    }
 
 
     render() {
-
+        const {classes} = this.props;
 
         return (
             <div>
-                <MuiThemeProvider>
-                    <div>
-                        <AppBar
-                            title="Login"
-                        />
-                        <TextField
-                            hintText="Enter your mail"
-                            floatingLabelText="Mail"
-
-                            onChange={(event, newValue) => this.onEmailChange(event)}
-                        />
-                        <br/>
-                        <TextField
-                            type="password"
-
-                            hintText="Enter your Password"
-                            floatingLabelText="Password"
-                            onChange={(event, newValue) => this.onPasswordChange(event)}
-                        />
-                        <br/>
-                        <Button variant="contained" label="Submit" primary={true} style={style}
-                                      onClick={(event) => this.handleSubmit(event)}/>
-                    </div>
-                </MuiThemeProvider>
+                <TextField
+                    id="outlined-email-input"
+                    label="Email"
+                    placeholder="Enter your mail"
+                    className={classes.textField}
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(event, newValue) => this.onEmailChange(event)}
+                />
+                <br/>
+                <TextField
+                    id="outlined-password-input"
+                    label="Password"
+                    placeholder="Enter your Password"
+                    className={classes.textField}
+                    type="password"
+                    autoComplete="current-password"
+                    margin="normal"
+                    variant="outlined"
+                    onChange={(event, newValue) => this.onPasswordChange(event)}
+                />
+                <br/>
+                <Button variant="contained" color="primary" className={classes.button}
+                        onClick={(event) => this.handleSubmit(event)}>
+                    Submit
+                </Button>
             </div>
         );
-
 
     }
 
@@ -91,8 +82,10 @@ const mapStateToProps = (state) => {
     return {email, password, user};
 };
 
-const style = {
-    margin: 15,
+const styles = {
+
 };
 
-export default withRouter(connect(mapStateToProps, {emailChanged, passwordChanged, loginUser})(Login));
+export default withStyles(styles)(withRouter(
+    connect(mapStateToProps, {emailChanged, passwordChanged, loginUser})(Login)
+));

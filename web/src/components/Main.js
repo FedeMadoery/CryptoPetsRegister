@@ -1,13 +1,19 @@
-import React, {Component} from 'react';
+import React, {Component, Suspense} from 'react';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
+import {Route, Router, Switch} from 'react-router-dom';
 
 import '../App.css';
-import {getAccountAndEtherBalance, initializeWeb3} from "../redux/actions";
-import Header from "./commons/Header";
-import SideBar from "./commons/SideBar";
-import {DRAWER_WIDTH} from "../utilities/constants";
+import {DRAWER_WIDTH} from '../utilities/constants';
+import history from './commons/history';
+import {getAccountAndEtherBalance, initializeWeb3} from '../redux/actions';
+import Header from './commons/Header';
+import SideBar from './commons/SideBar';
+import Loading from "./commons/Loading";
+import PrivateRoute from "./commons/PrivateRoute";
+import Login from "./auth/Login";
+import Home from "./Home";
 
 
 class Main extends Component {
@@ -21,11 +27,11 @@ class Main extends Component {
     }
 
     handleDrawerOpen = () => {
-        this.setState({ openDrawer: true });
+        this.setState({openDrawer: true});
     };
 
     handleDrawerClose = () => {
-        this.setState({ openDrawer: false });
+        this.setState({openDrawer: false});
     };
 
     render() {
@@ -41,7 +47,16 @@ class Main extends Component {
                         [classes.contentShift]: openDrawer,
                     })}
                 >
-                    <h1>Home</h1>
+                    <Router history={history}>
+                        <Suspense fallback={<Loading/>}>
+                            <Switch>
+                                <Route path="/" render={() => <Login/>} exact={true}/>
+                                <div>
+                                    <PrivateRoute path="/home" inner={Home}/>
+                                </div>
+                            </Switch>
+                        </Suspense>
+                    </Router>
                 </main>
             </>
         );
@@ -54,7 +69,7 @@ const mapStateToProps = (state) => {
 
 const drawerWidth = DRAWER_WIDTH;
 
-const styles = theme =>  ({
+const styles = theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing.unit * 3,
