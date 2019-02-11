@@ -14,7 +14,10 @@ export {default as Drawer} from '@material-ui/core/Drawer';
 export {default as Divider} from '@material-ui/core/Divider';
 export {default as CircularProgress} from '@material-ui/core/CircularProgress';
 export {default as Paper} from '@material-ui/core/Paper';
+export {default as Select} from '@material-ui/core/Select'
+export {default as InputLabel} from '@material-ui/core/InputLabel'
 
+export {default as FormControl} from '@material-ui/core/FormControl'
 export {default as Menu }from '@material-ui/core/Menu';
 export {default as MenuItem }from '@material-ui/core/MenuItem';
 

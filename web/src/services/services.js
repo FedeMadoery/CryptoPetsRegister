@@ -6,7 +6,7 @@ const service = new Service(axios);
 service.register({
 
     onRequest(config) {
-        console.log('onRequest');
+        //console.log('onRequest');
         config.headers = {
             Authorization: "dfasdfasdfasdfsd1231231321",
             ...config.headers
@@ -14,11 +14,11 @@ service.register({
         return config;
     },
     onSync(promise) {
-        console.log('onSync');
+        //console.log('onSync');
         return promise;
     },
     onResponse(response) {
-        console.log('onResponse');
+        //console.log('onResponse');
         return response;
     },
     onResponseError(error) {

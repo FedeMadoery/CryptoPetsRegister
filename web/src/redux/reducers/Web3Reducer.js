@@ -6,7 +6,8 @@ import {
     SENDING_TRANSACTION_WEB3,
     ERROR_TRANSACTION_WEB3,
     PENDING_TRANSACTION_WEB3,
-    REMOVE_PENDING_TRANSACTION_WEB3
+    REMOVE_PENDING_TRANSACTION_WEB3,
+    NEW_CONTRACT
 } from '../actions/types'
 
 import _ from 'lodash';
@@ -43,6 +44,11 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 pendingTransactions: _.remove(state.pendingTransactions, (value) => value === action.payload)
+            };
+        case NEW_CONTRACT:
+            return {
+                ...state,
+                contract: action.payload
             };
         default:
             return state;

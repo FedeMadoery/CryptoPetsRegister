@@ -18,3 +18,4 @@ export const SENDING_TRANSACTION_WEB3 = 'sending_transaction_web3';
 export const ERROR_TRANSACTION_WEB3 = 'error_transaction_web3';
 export const PENDING_TRANSACTION_WEB3 = 'pending_transaction_web3';
 export const REMOVE_PENDING_TRANSACTION_WEB3 = 'remove_pending_transaction_web3';
+export const NEW_CONTRACT = 'NEW_CONTRACT';

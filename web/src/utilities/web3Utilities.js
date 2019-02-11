@@ -128,21 +128,21 @@ export function instantiateContract(web3, _ABI, _ContractAddress) {
 }
 
 /** Function to call a function that not alter the smart contract state.  **/
-export function callMethod(contract, methodName, parameters) {
+export function callMethod(contract, methodName, account, parameters) {
     if (!contract || !methodName) {
         return
     }
-    const options = GAS_PRICE ? {gasPrice: GAS_PRICE, gas: MAX_GAS} : {};
-    return contract.methods[methodName](parameters).call(options)
+    const options = GAS_PRICE ? {gasPrice: GAS_PRICE, gas: MAX_GAS, from: account} : {from: account};
+    return contract.methods[methodName](...parameters).call(options)
 }
 
 /** Function to call a function that alter the smart contract state. **/
-export function sendMethod(contract, methodName, parameters) {
+export function sendMethod(contract, methodName, account, parameters) {
     if (!contract || !methodName) {
         return
     }
-    const options = GAS_PRICE ? {gasPrice: GAS_PRICE, gas: MAX_GAS} : {};
-    return contract.methods[methodName](parameters).send(options)
+    const options = GAS_PRICE ? {gasPrice: GAS_PRICE, gas: MAX_GAS, from: account} : {from: account};
+    return contract.methods[methodName](...parameters).send(options)
 }
 
 /** Function to call a function that not alter the smart contract state, and send money with it **/
@@ -151,7 +151,8 @@ export function sendMethodWithMoney(contract, web3, methodName, parameters, mone
         return
     }
     const valueToSend = {from: fromAccount, value: web3.utils.toWei(money.toString(), "ether")};
-    return contract.methods[methodName](parameters).send(valueToSend)
+    const options = GAS_PRICE ? {gasPrice: GAS_PRICE, gas: MAX_GAS, ...valueToSend} : valueToSend;
+    return contract.methods[methodName](...parameters).send(options)
 }
 
 /** Generic function to subscribe to an event in the contract **/

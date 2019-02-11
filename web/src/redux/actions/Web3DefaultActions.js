@@ -2,7 +2,7 @@ import {
     ERROR_INITIALIZE_WEB3,
     ERROR_TRANSACTION_WEB3,
     INITIALIZE_URL_WEB3,
-    INITIALIZE_WEB3,
+    INITIALIZE_WEB3, NEW_CONTRACT,
     PENDING_TRANSACTION_WEB3,
     REMOVE_PENDING_TRANSACTION_WEB3,
     SENDING_TRANSACTION_WEB3,
@@ -71,5 +71,12 @@ export const _removePendingTransactionWeb3 = (pending) => {
     return {
         type: REMOVE_PENDING_TRANSACTION_WEB3,
         payload: pending
+    };
+};
+
+export const _initializeContract = (contract) => {
+    return {
+        type: NEW_CONTRACT,
+        payload: contract
     };
 };

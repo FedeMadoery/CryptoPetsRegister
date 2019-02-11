@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
 import "./PetsManager.sol";
-import "./commons/ERC721.sol";
+import "./ERC721.sol";
 
 contract PetsOwnership is PetsManager, ERC721{
 
