@@ -36,12 +36,16 @@ contract PetsManager is Ownable {
     Pet[] public pets;
     mapping(uint => address) public petToOwner;
 
-    function pets(uint _index) view returns (string, string, string, string, uint8, uint, uint, uint){
+    function pets(uint _index) public view returns (string, string, string, string, uint8, uint, uint, uint){
         Pet memory result = pets[_index];
 
         return (result.name, result.color,
         result.breed.breedType, result.breed.subType,
         result.sex, result.dna, result.fatherId, result.motherId);
+    }
+
+    function getPetsLength() public view returns(uint) {
+        return pets.length;
     }
 
     function _createPet(string _name, string _color, Breed _breed, uint8 _sex, uint _dna, uint _fatherId, uint _motherId) private {

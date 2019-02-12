@@ -8,6 +8,7 @@ import {
     ChevronLeftIcon, ChevronRightIcon, InboxIcon, MailIcon
 } from "../material-ui";
 import {DRAWER_WIDTH} from "../../utilities/constants";
+import history from '../../components/commons/history';
 
 
 class SideBar extends Component {
@@ -31,8 +32,8 @@ class SideBar extends Component {
                 </div>
                 <Divider/>
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
+                    {['Home', 'Details', 'Send email', 'Drafts'].map((text, index) => (
+                        <ListItem button key={text} onClick={() => history.push('/' + text.toLocaleLowerCase())}>
                             <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
                             <ListItemText primary={text}/>
                         </ListItem>
@@ -83,6 +84,6 @@ const styles = theme => ({
 });
 
 
-export default withStyles(styles, { withTheme: true })(
+export default withStyles(styles, {withTheme: true})(
     connect(mapStateToProps, {})(SideBar)
 );

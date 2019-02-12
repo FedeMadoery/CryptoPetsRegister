@@ -1,8 +1,12 @@
 import {
+    ADD_SUBSCRIBED_EVENTS,
+    DELETE_NOTIFICATION,
     ERROR_INITIALIZE_WEB3,
     ERROR_TRANSACTION_WEB3,
     INITIALIZE_URL_WEB3,
-    INITIALIZE_WEB3, NEW_CONTRACT,
+    INITIALIZE_WEB3,
+    NEW_CONTRACT,
+    NEW_NOTIFICATION, NO_PENDING_NOTIFICATION,
     PENDING_TRANSACTION_WEB3,
     REMOVE_PENDING_TRANSACTION_WEB3,
     SENDING_TRANSACTION_WEB3,
@@ -30,7 +34,7 @@ export const _errorInitializeWeb3 = (error) => { //TODO handler error
         type: ERROR_INITIALIZE_WEB3,
         payload: error
     };
-}
+};
 
 export const _updateAccount = (account) => {
     return {
@@ -79,4 +83,32 @@ export const _initializeContract = (contract) => {
         type: NEW_CONTRACT,
         payload: contract
     };
+};
+
+export const _newNotification = (notification) => {
+    return {
+        type: NEW_NOTIFICATION,
+        payload: notification
+    }
+};
+
+export const _deleteNotification = (index) => {
+    return {
+        type: DELETE_NOTIFICATION,
+        payload: index
+    }
+};
+
+export const _resetPendingNotification = () => {
+    return {
+        type: NO_PENDING_NOTIFICATION,
+        payload: 0
+    }
+};
+
+export const _addSuscription = (eventName) => {
+    return {
+        type: ADD_SUBSCRIBED_EVENTS,
+        payload: eventName
+    }
 };

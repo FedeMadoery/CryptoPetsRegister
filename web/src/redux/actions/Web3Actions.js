@@ -2,12 +2,13 @@ import {
     accountChangedSubscription, callMethod,
     getAccountAndBalance,
     initializationWeb3,
-    networkChangedSubscription, sendMethod, sendMethodWithMoney
+    networkChangedSubscription, sendMethod, sendMethodWithMoney, subscribeToEvent
 } from "../../utilities/web3Utilities";
 
 import {
+    _addSuscription,
     _errorInitializeWeb3, _initializeContract,
-    _initializeWeb3,
+    _initializeWeb3, _newNotification,
     _sendingTransactionWeb3,
     _updateAccount,
     _updateBalance
@@ -119,11 +120,25 @@ export function callTransaction(contract, methodName, account, parameters) {
             (result) => {
                 dispatch(_sendingTransactionWeb3(false));
                 console.log(result);
+                return result
             }
         ).catch((error) => {
             console.log({error: error}) // TODO Wrap errors
             dispatch(_sendingTransactionWeb3(false));
         })
+    }
+}
+
+export function subscribeToContractEvent(contract, eventName, callBack) {
+    return (dispatch) => {
+        dispatch(_addSuscription(eventName));
+        subscribeToEvent(contract, eventName,
+            (data) => {
+                dispatch(_newNotification(data));
+                if (callBack) callBack(data);
+            },
+            console.error // errorCallBack
+        );
     }
 }
 

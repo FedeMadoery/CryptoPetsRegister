@@ -5,7 +5,8 @@ import {callTransaction, initializeContract, sendTransaction, sendTransactionWit
 import {interface as PetsAbi} from "../utilities/ABIs/PetsOwnership";
 import _ from 'lodash';
 
-import {Button, FormControl, InputLabel, Select, MenuItem, TextField} from './material-ui';
+import {Button, FormControl, InputLabel, Select, MenuItem, TextField,
+    MonetizationIcon } from './material-ui';
 import {withStyles} from "@material-ui/core";
 import Loading from "./commons/Loading";
 
@@ -19,7 +20,7 @@ class Home extends Component {
 
     componentWillMount() {
         const {initializeContract, web3Obj} = this.props;
-        initializeContract(PetsAbi, "0xaDc5B4176e9136068E5dbCF8a59eA755e7Af42b5", web3Obj);
+        initializeContract(PetsAbi, "0x6244fcca4de71695e1f6625426a70ca906e4fb2b", web3Obj);
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -74,7 +75,6 @@ class Home extends Component {
 
     handleInputChange = (index, name) => event => {
         event.persist();
-        console.log(this.state)
         this.setState((state) => {
             return {
                 params: state.params.map((p, i) => {
@@ -94,7 +94,6 @@ class Home extends Component {
         const functionToExecute = _.split(selectedFunction, '(', 1);
 
         callTransaction(contract, functionToExecute, account, params);
-        //contract.methods.pets(0).call({from:account}).then(console.log);
     }
 
     send() {
@@ -156,7 +155,8 @@ class Home extends Component {
                 {!sendingTransactions && (
                     <Button variant="contained" color="secondary" className={classes.button}
                             onClick={() => this.sendWithMoney()}>
-                        Send Functions Whit Money
+                        Whit Money
+                        <MonetizationIcon className={classes.leftIcon} />
                     </Button>
                 )}
             </>
@@ -169,6 +169,13 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
     return {...state.web3};
+};
+
+const mapDispatchToProps =  {
+        sendTransaction,
+        callTransaction,
+        initializeContract,
+        sendTransactionWithMoney
 };
 
 const styles = theme => ({
@@ -191,5 +198,5 @@ const styles = theme => ({
 });
 
 export default withStyles(styles)(
-    withRouter(connect(mapStateToProps, {sendTransaction, callTransaction, initializeContract, sendTransactionWithMoney})(Home))
+    withRouter(connect(mapStateToProps, mapDispatchToProps)(Home))
 );

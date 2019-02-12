@@ -7,7 +7,10 @@ import {
     ERROR_TRANSACTION_WEB3,
     PENDING_TRANSACTION_WEB3,
     REMOVE_PENDING_TRANSACTION_WEB3,
-    NEW_CONTRACT
+    NEW_CONTRACT,
+    DELETE_NOTIFICATION,
+    NEW_NOTIFICATION,
+    NO_PENDING_NOTIFICATION, ADD_SUBSCRIBED_EVENTS, DELETE_SUBSCRIBED_EVENTS
 } from '../actions/types'
 
 import _ from 'lodash';
@@ -20,7 +23,10 @@ const INITIAL_STATE = {
     contract: {},
     pendingTransactions: [],
     errorTransaction: '',
-    sendingTransactions: false
+    sendingTransactions: false,
+    pendingNotifications: 0,
+    notifications: [],
+    subscribedEvents: []
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -49,6 +55,34 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 contract: action.payload
+            };
+        case NEW_NOTIFICATION:
+            return {
+                ...state,
+                notifications: _.uniqBy([...state.notifications, action.payload],'transactionHash'),
+                pendingNotifications: state.pendingNotifications + 1
+            };
+        case DELETE_NOTIFICATION:
+            return {
+                ...state,
+                notifications: [
+                    ...state.notifications.slice(0, action.payload),
+                    ...state.notifications.slice(action.payload + 1)
+                ],
+            };
+        case NO_PENDING_NOTIFICATION:
+            return {
+                ...state,
+                pendingNotifications: action.payload
+            };
+        case ADD_SUBSCRIBED_EVENTS:
+            return {
+                ...state,
+                subscribedEvents: [...state.subscribedEvents, action.payload]
+            };
+        case DELETE_SUBSCRIBED_EVENTS:
+            return {
+                ...state
             };
         default:
             return state;

@@ -13,3 +13,6 @@ export const MAX_GAS = 0; // TODO Implement max_gas as optional parameter
 
 
 export const DRAWER_WIDTH = 240; // Size of SideBar
+
+
+export const UNSPLASH_API_KEY = 'a949a39ff80abec586de164bd671156ce21c913db55d22cf7409fc528d084c67'

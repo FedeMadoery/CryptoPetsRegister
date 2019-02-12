@@ -4,47 +4,110 @@ import {withStyles} from "@material-ui/core";
 import {connect} from "react-redux";
 import _ from 'lodash';
 
-import {getAccountAndEtherBalance, initializeWeb3} from "../../redux/actions/Web3Actions";
+import {
+    subscribeToContractEvent,
+    getAccountAndEtherBalance,
+    initializeWeb3,
+    _deleteNotification,
+    _resetPendingNotification
+} from "../../redux/actions";
 import {
     AppBar, Toolbar, IconButton, Typography, InputBase, Badge, Menu, MenuItem, ListItemIcon, ListItemText,
     MenuIcon, SearchIcon, MailIcon, NotificationsIcon, AccountCircle, MoreIcon, WalletIcon, MoneyIcon,
-    fade
+    fade, DeleteIcon
 } from '../material-ui'
 
 class Header extends Component {
     state = {
-        isMenuOpen: false,
-        pendingNotifications: 1, // TODO Move to Redux in future feature
+        anchorAccEl: null,
+        anchorNotEl: null,
     };
 
-    componentDidMount() {
+    componentWillMount() {
         const {initializeWeb3} = this.props;
         initializeWeb3("http://localhost:8545");
     }
 
-    handleMenuClose = () => {
-        this.setState({anchorEl: null});
+    componentWillReceiveProps(nextProps, nextContext) {
+        const {web3Obj, contract} = this.props.web3;
+        const {subscribeToContractEvent} = this.props;
+        if (web3Obj && nextProps.web3.contract !== contract && nextProps.web3.contract) {
+            if (nextProps.web3.subscribedEvents.indexOf("NewPet") === -1)
+                subscribeToContractEvent(nextProps.web3.contract, "NewPet");
+            if (nextProps.web3.subscribedEvents.indexOf("OwnershipTransferred") === -1 )
+                subscribeToContractEvent(nextProps.web3.contract, "OwnershipTransferred");
+            if (nextProps.web3.subscribedEvents.indexOf("Transfer") === -1)
+                subscribeToContractEvent(nextProps.web3.contract, "Transfer") ;
+        }
+    }
+
+    handleClose = (name) => {
+        this.setState({[name]: null});
+        const {web3, _resetPendingNotification} = this.props;
+        if (web3.pendingNotifications) _resetPendingNotification();
+
     };
 
-    handleProfileMenuOpen = event => {
-        this.setState({anchorEl: event.currentTarget});
+    handleOpen = (name, event) => {
+        this.setState({[name]: event.currentTarget});
     };
+
+    renderNotification() {
+        const {classes, _deleteNotification} = this.props;
+        const {notifications} = this.props.web3;
+
+        return notifications.map((n, index) => {
+            let text;
+            switch (n.event) {
+                case "NewPet":
+                    text = (<ListItemText classes={{primary: classes.primary}} inset
+                                          primary={n.event}
+                                          secondary={'Se creo la mascota de nombre: ' + n.returnValues.name}/>);
+                    break;
+                case "Transfer":
+                    text = (<ListItemText classes={{primary: classes.primary}} inset
+                                          primary={n.event}
+                                          secondary={'Se hizo una transferencia de: ' + n.returnValues._tokenId}/>);
+                    break;
+                case "OwnershipTransferred":
+                    text = (<ListItemText classes={{primary: classes.primary}} inset
+                                          primary={n.event}
+                                          secondary={n.returnValues.previousOwner + ' ya no es mas el owner'}/>);
+                    break;
+                default:
+                    text = (<ListItemText classes={{primary: classes.primary}} inset
+                                          primary={n.event}
+                                          secondary={'Notificacion sin formato'}/>);
+                    break;
+            }
+
+            return (
+                <MenuItem className={classes.menuItem} key={n}>
+                    {text}
+                    <ListItemIcon className={classes.icon} onClick={() => _deleteNotification(index)}>
+                        <DeleteIcon/>
+                    </ListItemIcon>
+                </MenuItem>
+            )
+        })
+    }
 
     render() {
         const {classes, handleDrawerOpen} = this.props;
-        const {balance, account} = this.props.web3;
+        const {balance, account, pendingNotifications} = this.props.web3;
         const accountTruncated = _.truncate(account, {'length': 6,}) + account.slice(-4);
-        const {anchorEl, pendingNotifications} = this.state;
-        const isMenuOpen = Boolean(anchorEl);
+        const {anchorAccEl, anchorNotEl} = this.state;
+        const isMenuOpen = Boolean(anchorAccEl);
+        const isNotifOpen = Boolean(anchorNotEl) && !!pendingNotifications;
 
 
         const accountInfo = (
             <Menu
-                anchorEl={anchorEl}
+                anchorEl={anchorAccEl}
                 anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                 transformOrigin={{vertical: 'top', horizontal: 'right'}}
                 open={isMenuOpen}
-                onClose={this.handleMenuClose}
+                onClose={() => this.handleClose('anchorAccEl')}
             >
                 <MenuItem className={classes.menuItem}>
                     <ListItemIcon className={classes.icon}>
@@ -58,6 +121,18 @@ class Header extends Component {
                     </ListItemIcon>
                     <ListItemText classes={{primary: classes.primary}} inset primary={balance + ' Ethers'}/>
                 </MenuItem>
+            </Menu>
+        );
+
+        const notificationInfo = (
+            <Menu
+                anchorEl={anchorNotEl}
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                transformOrigin={{vertical: 'top', horizontal: 'right'}}
+                open={isNotifOpen}
+                onClose={() => this.handleClose('anchorNotEl')}
+            >
+                {this.renderNotification()}
             </Menu>
         );
 
@@ -96,7 +171,8 @@ class Header extends Component {
                                     </Badge>
                                 </IconButton>
                             </div>
-                            <IconButton color="inherit">
+                            <IconButton color="inherit"
+                                        onClick={(event) => this.handleOpen('anchorNotEl', event)}>
                                 <Badge badgeContent={pendingNotifications} color="secondary">
                                     <NotificationsIcon/>
                                 </Badge>
@@ -104,7 +180,7 @@ class Header extends Component {
                             <IconButton
                                 aria-owns={isMenuOpen ? 'material-appbar' : undefined}
                                 aria-haspopup="true"
-                                onClick={this.handleProfileMenuOpen}
+                                onClick={(event) => this.handleOpen('anchorAccEl', event)}
                                 color="inherit"
                             >
                                 <AccountCircle/>
@@ -118,6 +194,7 @@ class Header extends Component {
                     </Toolbar>
                 </AppBar>
                 {accountInfo}
+                {notificationInfo}
             </>
         )
     }
@@ -125,6 +202,14 @@ class Header extends Component {
 
 const mapStateToProps = (state) => {
     return {...state}
+};
+
+const mapDispatchToProps = {
+    initializeWeb3,
+    getAccountAndEtherBalance,
+    subscribeToContractEvent,
+    _resetPendingNotification,
+    _deleteNotification
 };
 
 const styles = theme => ({
@@ -198,5 +283,5 @@ const styles = theme => ({
 });
 
 export default withStyles(styles)(
-    connect(mapStateToProps, {initializeWeb3, getAccountAndEtherBalance})(Header)
+    connect(mapStateToProps, mapDispatchToProps)(Header)
 );

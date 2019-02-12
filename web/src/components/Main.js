@@ -14,6 +14,7 @@ import Loading from "./commons/Loading";
 import PrivateRoute from "./commons/PrivateRoute";
 import Login from "./auth/Login";
 import Home from "./Home";
+import Details from "./Details";
 
 
 class Main extends Component {
@@ -53,6 +54,7 @@ class Main extends Component {
                                 <Route path="/" render={() => <Login/>} exact={true}/>
                                 <div>
                                     <PrivateRoute path="/home" inner={Home}/>
+                                    <PrivateRoute path="/details" inner={Details}/>
                                 </div>
                             </Switch>
                         </Suspense>

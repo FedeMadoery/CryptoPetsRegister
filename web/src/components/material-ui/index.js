@@ -17,6 +17,12 @@ export {default as Paper} from '@material-ui/core/Paper';
 export {default as Select} from '@material-ui/core/Select'
 export {default as InputLabel} from '@material-ui/core/InputLabel'
 
+export {default as Card} from '@material-ui/core/Card'
+export {default as CardActionArea} from '@material-ui/core/CardActionArea'
+export {default as CardMedia} from '@material-ui/core/CardMedia'
+export {default as CardContent} from '@material-ui/core/CardContent'
+export {default as CardActions} from '@material-ui/core/CardActions'
+
 export {default as FormControl} from '@material-ui/core/FormControl'
 export {default as Menu }from '@material-ui/core/Menu';
 export {default as MenuItem }from '@material-ui/core/MenuItem';
@@ -44,8 +50,10 @@ export {
     AccountCircle,
     More as MoreIcon,
     AccountBalanceWallet as WalletIcon,
-    Money as MoneyIcon,
+    MoneyOutlined as MoneyIcon,
+    MonetizationOnOutlined as MonetizationIcon,
     ChevronLeft as ChevronLeftIcon,
     ChevronRight as ChevronRightIcon,
     Inbox as InboxIcon,
+    DeleteOutline as DeleteIcon
 } from '@material-ui/icons'
