@@ -12,7 +12,6 @@ import {
     _updateAccount,
     _updateBalance
 } from "./Web3DefaultActions";
-import {interface as PetsAbi} from "../../utilities/ABIs/PetsOwnership";
 
 /** Action to initialize Web3 and trow error or subscribe for network and account change **/
 export function initializeWeb3(providerUrl) {
@@ -79,6 +78,7 @@ export function sendTransaction(contract, methodName, account, parameters) {
             }
         ).catch((error) => {
             console.log({error: error}) // TODO Wrap errors
+            dispatch(_sendingTransactionWeb3(false));
         })
     }
 }
@@ -105,6 +105,8 @@ export function sendTransactionWithMoney(contract, web3Obj, methodName, account,
             }
         ).catch((error) => {
             console.log({error: error}) // TODO Wrap errors
+            dispatch(_sendingTransactionWeb3(false));
+
         })
     }
 }
@@ -120,6 +122,7 @@ export function callTransaction(contract, methodName, account, parameters) {
             }
         ).catch((error) => {
             console.log({error: error}) // TODO Wrap errors
+            dispatch(_sendingTransactionWeb3(false));
         })
     }
 }

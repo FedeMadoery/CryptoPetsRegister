@@ -1,7 +1,7 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const Web3 = require('web3');
 const readline = require('readline');
-// const {interface, bytecode} = require('./compile');
+const {interface, bytecode} = require('../public/PetsOwnership');
 
 /** Colors for the messages **/
 FgRed = "\x1b[31m";

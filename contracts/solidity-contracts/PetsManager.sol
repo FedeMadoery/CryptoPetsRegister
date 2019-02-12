@@ -34,10 +34,18 @@ contract PetsManager is Ownable {
     }
 
     Pet[] public pets;
-    mapping (uint => address) public petToOwner;
+    mapping(uint => address) public petToOwner;
+
+    function pets(uint _index) view returns (string, string, string, string, uint8, uint, uint, uint){
+        Pet memory result = pets[_index];
+
+        return (result.name, result.color,
+        result.breed.breedType, result.breed.subType,
+        result.sex, result.dna, result.fatherId, result.motherId);
+    }
 
     function _createPet(string _name, string _color, Breed _breed, uint8 _sex, uint _dna, uint _fatherId, uint _motherId) private {
-        uint id = pets.push(Pet(_name, _color, _breed, _sex, _dna, _fatherId, _motherId, true));
+        uint id = pets.push(Pet(_name, _color, _breed, _sex, _dna, _fatherId, _motherId, true)) - 1;
         petToOwner[id] = msg.sender;
         emit NewPet(id, _name, _dna);
     }
@@ -55,7 +63,7 @@ contract PetsManager is Ownable {
 
     function _equalsBreed(Breed memory _first, Breed memory _second) internal pure returns (bool) {
         // Just compare the output of hashing all fields packed
-        return(keccak256(abi.encodePacked(_first.breedType, _first.subType)) == keccak256(abi.encodePacked(_second.breedType, _second.subType)));
+        return (keccak256(abi.encodePacked(_first.breedType, _first.subType)) == keccak256(abi.encodePacked(_second.breedType, _second.subType)));
     }
 
     function registerPet(string _name, string _color, uint8 _sex, uint _fatherId, uint _motherId) external {
@@ -65,9 +73,9 @@ contract PetsManager is Ownable {
         Pet memory mother = pets[_motherId];
 
         // The child will be pure breed if the father and mother has the same breed
-        Breed memory breed = (_equalsBreed(father.breed, mother.breed) ? mother.breed : Breed("Half Blood", "") );
+        Breed memory breed = (_equalsBreed(father.breed, mother.breed) ? mother.breed : Breed("Half Blood", ""));
 
-        uint dna = _generateRandomDna( abi.encodePacked(father.name, mother.name, _name, _color, _sex));
+        uint dna = _generateRandomDna(abi.encodePacked(father.name, mother.name, _name, _color, _sex));
         _createPet(_name, _color, breed, _sex, dna, _fatherId, _motherId);
     }
 
@@ -88,5 +96,9 @@ contract PetsManager is Ownable {
 
     function withdraw() external onlyOwner {
         owner().transfer(address(this).balance);
+    }
+
+    function balance() external onlyOwner returns(uint) {
+        return address(this).balance;
     }
 }
